@@ -11,7 +11,7 @@ const AuthForm = () => {
   const emailInputRef=useRef();
   const passwordInputRef=useRef();
 
-  const submitHandler=(e)=>{
+  const submitHandler= async (e)=>{
     e.preventDefault();
     setIsLoading(true);
     setError(null);
@@ -19,20 +19,43 @@ const AuthForm = () => {
     const enteredEmail=emailInputRef.current.value;
     const enteredPassword=passwordInputRef.current.value;
     console.log(enteredEmail,enteredPassword);
-    
-    fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=AIzaSyCsfWy_iELOhjwPgk7wmq8k2Ldly3PqApY').then(res=>{
-      if(res.ok){
-        return res.json();
-      }else{
-        throw new error();
-      }
-    })
-    .catch(err=>{
-        setError(err.message);
-        setIsLoading(false);
+    let url = isLogin ? 'signInWithPassword' : 'signUp';
+      
+    try{
+      const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:${url}?key=AIzaSyCsfWy_iELOhjwPgk7wmq8k2Ldly3PqApY`, 
+        {
+          method: 'POST',
+          body:JSON.stringify({
+            email:enteredEmail,
+            password:enteredPassword,
+            returnSecureToken:true
+          }),
+        headers:{
+          'Content-Type':'application/json'
+        }
       });
-  }
-
+      setIsLoading(false);
+      
+      const data = await res.json();
+      
+      if(res.ok){
+        console.log(data);
+      }else{
+        let errorMessage = 'Authentication failed!';
+        if(data && data.error && data.error.message){
+          errorMessage = data.error.message;
+        }
+        throw new Error(errorMessage)
+      }
+    }catch(err){
+      setIsLoading(false);
+      setError(err);
+      console.log(err);
+    }      
+    
+      
+  };
+  
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
