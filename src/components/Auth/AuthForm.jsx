@@ -46,6 +46,11 @@ const AuthForm = () => {
       if(res.ok){
         AuthCtxt.onLogin(data.idToken);
         navigate('/');
+        //
+        setTimeout(() => {
+            AuthCtxt.onLogout();
+            navigate('/auth');
+        }, (5*60*1000)); // this settimeout will auto logout user after 5 mins
         console.log(data);
       }else{
         let errorMessage = 'Authentication failed!';

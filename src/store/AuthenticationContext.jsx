@@ -19,7 +19,7 @@ export const AuthContextProvider = (props) => {
     };
     const loginHandler = (token) => {
         setToken(token);
-        localStorage.setItem('token', token);
+        localStorage.setItem('token', token); // store token in localStorage
         console.log(token);
     };
     const defaultValue = {
