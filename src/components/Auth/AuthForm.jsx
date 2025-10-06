@@ -1,6 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 
 import classes from './AuthForm.module.css';
+import AuthContext from '../../store/AuthenticationContext';
+
 // API =AIzaSyCsfWy_iELOhjwPgk7wmq8k2Ldly3PqApY; 
 // https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=[API_KEY]
 
@@ -10,6 +12,8 @@ const AuthForm = () => {
   const [error, setError] = useState(null);
   const emailInputRef=useRef();
   const passwordInputRef=useRef();
+
+  const AuthCtxt = useContext(AuthContext);
 
   const submitHandler= async (e)=>{
     e.preventDefault();
@@ -39,6 +43,7 @@ const AuthForm = () => {
       const data = await res.json();
       
       if(res.ok){
+        AuthCtxt.onLogin(data.idToken);
         console.log(data);
       }else{
         let errorMessage = 'Authentication failed!';
