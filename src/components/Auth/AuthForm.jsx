@@ -1,5 +1,5 @@
 import { useState, useRef, useContext } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import classes from './AuthForm.module.css';
 import AuthContext from '../../store/AuthenticationContext';
 
@@ -7,6 +7,7 @@ import AuthContext from '../../store/AuthenticationContext';
 // https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=[API_KEY]
 
 const AuthForm = () => {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -44,6 +45,7 @@ const AuthForm = () => {
       
       if(res.ok){
         AuthCtxt.onLogin(data.idToken);
+        navigate('/');
         console.log(data);
       }else{
         let errorMessage = 'Authentication failed!';

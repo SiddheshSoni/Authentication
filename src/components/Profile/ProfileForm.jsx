@@ -1,8 +1,9 @@
 import { useContext, useRef, useState} from 'react';
 import classes from './ProfileForm.module.css';
 import AuthContext from '../../store/AuthenticationContext';
-
+import { useNavigate } from 'react-router-dom';
 const ProfileForm = () => {
+  const navigate = useNavigate();
   const {token, onLogout} = useContext(AuthContext);
   const passwordInputRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
@@ -34,9 +35,10 @@ const ProfileForm = () => {
       
       if(res.ok){
         setIsLoading(false);
+        console.log(data);
         alert('Password changed successfully!');
         onLogout();
-        console.log(data);
+        navigate('/auth');
       }
       else{
         let errorMessage = 'Authentication failed!';
